@@ -1,11 +1,13 @@
 Ext.application({
-    name : 'portal',
-
-    //Here we build our GUI from existing components - this function should only be assembling the GUI
-    //Any processing logic should be managed in dedicated classes - don't let this become a
-    //monolithic 'do everything' function
+    name: "anvgl",
+	
+    appFolder: "js/vegl",
+    
     launch : function() {
-
+    	
+    	var map = null;
+    	var defaultBaseLayer = "Google Satellite";
+    	
         //Send these headers with every AJax request we make...
         Ext.Ajax.defaultHeaders = {
             'Accept-Encoding': 'gzip, deflate' //This ensures we use gzip for most of our requests (where available)
@@ -73,8 +75,10 @@ Ext.application({
                 }
             }
         };
+        
         var urlParams = Ext.Object.fromQueryString(window.location.search.substring(1));
-        var map = null;
+        
+        
         if (urlParams && urlParams.map && urlParams.map === 'googleMap') {
             map = Ext.create('portal.map.gmap.GoogleMap', mapCfg);
         } else {
@@ -92,6 +96,7 @@ Ext.application({
         //Utility function for adding a new layer to the map
         //record must be a CSWRecord or KnownLayer
         var handleAddRecordToMap = function(sourceGrid, record) {
+        	console.log("handleAddRecordToMap called. **");
             if (!(record instanceof Array)) {
                 record = [record];
             }
@@ -101,7 +106,7 @@ Ext.application({
 
                 //Ensure the layer DNE first
                 var existingRecord = layerStore.getById(record[z].get('id'));
-                if (existingRecord) {
+                if (existingReco) {
                     layersPanel.getSelectionModel().select([existingRecord], false);
                     return;
                  }
@@ -207,14 +212,25 @@ Ext.application({
             border: false,
             html : "<div style='width:100%; height:100%' id='center_region-map'></div>",
             listeners: {
-                afterrender: function () {
-                    map.renderToContainer(centerPanel,'center_region-map');   //After our centerPanel is displayed, render our map into it
+                afterrender: function () {    
+                    map.renderToContainer(centerPanel,'center_region-map');   //After our centerPanel is displayed, render our map into it                                     
+                    setDefaultBaseLayer();
                 }
             }
         });
-
-
-
+        
+        
+        /** set the default base layer of the map */
+		function setDefaultBaseLayer() {
+			Ext.each(map.map.layers, function(layer) {
+		    	if (layer.name === defaultBaseLayer) {
+		    		map.map.setBaseLayer(layer);
+		    		return false;
+		    	}
+		    });
+		};
+        
+        
         /**
          * Add all the panels to the viewport
          */
