@@ -110,7 +110,7 @@ Ext.application({
 
                 //Ensure the layer DNE first
                 var existingRecord = layerStore.getById(record[z].get('id'));
-                if (existingReco) {
+                if (existingRecord) {
                     layersPanel.getSelectionModel().select([existingRecord], false);
                     return;
                  }
