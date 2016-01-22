@@ -3,10 +3,14 @@ Ext.application({
 	
     appFolder: "js/vegl",
     
+	requires: ["anvgl.util.handleException"],
+    
     launch : function() {
     	
     	var map = null;
     	var defaultBaseLayer = "Google Satellite";
+    	
+    	var handleException  = new anvgl.util.handleException();
     	
         //Send these headers with every AJax request we make...
         Ext.Ajax.defaultHeaders = {
@@ -222,12 +226,16 @@ Ext.application({
         
         /** set the default base layer of the map */
 		function setDefaultBaseLayer() {
-			Ext.each(map.map.layers, function(layer) {
-		    	if (layer.name === defaultBaseLayer) {
-		    		map.map.setBaseLayer(layer);
-		    		return false;
-		    	}
-		    });
+			try {
+				Ext.each(map.map.layers, function(layer) {
+			    	if (layer.name === defaultBaseLayer) {
+			    		map.map.setBaseLayer(layer);
+			    		return false;
+			    	}
+			    });
+			} catch (e) {
+				handleException.onFunction(arguments, e);
+			}
 		};
         
         
