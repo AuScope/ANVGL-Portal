@@ -10,7 +10,8 @@ Ext.define("anvgl.view.Map", {
 	id: "center_region",
     html: "<div style='width:100%; height:100%' id='center_region-map'></div>",
     region: "center",
-
+    margin: '100 0 0 0',
+    
 	constructor: function(config) {
 		this.map = config.map;
 		this.defaultBaseLayerName = config.defaultBaseLayerName;
