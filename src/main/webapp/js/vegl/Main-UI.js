@@ -1,77 +1,23 @@
 Ext.application({
-    name: "anvgl",
-	
-    appFolder: "js/vegl",
+    name : "anvgl",
+
+    appFolder : "js/vegl",
     
-    stores: [
-             "FeaturedLayers"
-         ],
-	
-	views: [
-	         "Header", 
-	         "FeaturedLayers", 
-	         "KnownLayers", 
-	         "Tabs",
-	         "Footer"
-        ],
-    
-	requires: ["anvgl.util.handleException"],
+    stores : ["FeaturedLayers"],
+	views : ["Header", "FeaturedLayers", "KnownLayers", "Tabs", "Footer"],
+	requires : ["anvgl.util.handleException"],
     
     launch : function() {
     	
     	var map = null;
-    	var defaultBaseLayer = "Google Satellite";
-    	
+    	var defaultBaseLayerName = "Google Satellite";
+
     	var handleException  = new anvgl.util.handleException();
     	
         //Send these headers with every AJax request we make...
         Ext.Ajax.defaultHeaders = {
             'Accept-Encoding': 'gzip, deflate' //This ensures we use gzip for most of our requests (where available)
         };
-
-        var urlParams = Ext.Object.fromQueryString(window.location.search.substring(1));
-        var isDebugMode = urlParams.debug;
-
-        var layersSorter = new Ext.util.Sorter({
-            sorterFn: function(record1, record2) {
-            	// 'order' is always received on the JSON
-            	// if it is an empty string, the layers are sorted on layer name, ascending
-                var order1 = (record1.data.order.length ? record1.data.order : record1.data.name);
-                var order2 = (record2.data.order.length ? record2.data.order : record2.data.name);
-                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
-            },
-            direction: 'ASC'
-        })
-
-        var layersGrouper = new Ext.util.Grouper({
-            groupFn: function(item) {
-                return item.data.group;
-            },
-            sorterFn: function(record1, record2) {
-            	// 'order' is always received on the JSON
-            	// if it is an empty string, the groups are sorted on group name, ascending
-            	var order1 = (record1.data.order.length ? record1.data.order : record1.data.group);
-            	var order2 = (record2.data.order.length ? record2.data.order : record2.data.group);
-                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
-            },
-            direction: 'ASC'
-        });
-
-        var knownLayerStore = Ext.create('Ext.data.Store', {
-            model : 'portal.knownlayer.KnownLayer',
-            proxy : {
-                type : 'ajax',
-                url : 'getKnownLayers.do',
-                reader : {
-                    type : 'json',
-                    rootProperty : 'data'
-                }
-            },
-            sorters: [layersSorter],
-            grouper: layersGrouper,
-            autoLoad : true
-        });
-
 
         //Create our store for holding the set of
         //layers that have been added to the map
@@ -93,7 +39,7 @@ Ext.application({
         };
         
         var urlParams = Ext.Object.fromQueryString(window.location.search.substring(1));
-        
+        var isDebugMode = urlParams.debug;
         
         if (urlParams && urlParams.map && urlParams.map === 'googleMap') {
             map = Ext.create('portal.map.gmap.GoogleMap', mapCfg);
@@ -168,97 +114,50 @@ Ext.application({
             }
         };
 
-        var knownLayersPanel = Ext.create('portal.widgets.panel.KnownLayerPanel', {
-            title : 'Featured',
-            store : knownLayerStore,
-            activelayerstore : layerStore,
-            map : map,
-            layerFactory : layerFactory,
-            tooltip : {
-                anchor : 'top',
-                title : 'Featured Layers',
-                text : '<p1>This is where the portal groups data services with a common theme under a layer. This allows you to interact with multiple data providers using a common interface.</p><br><p>The underlying data services are discovered from a remote registry. If no services can be found for a layer, it will be disabled.</p1>',
-                showDelay : 100,
-                icon : 'portal-core/img/information.png',
-                dismissDelay : 30000
-            }
-        });
+        // featured layers store
+        var featuredLayerStore = Ext.create("store.FeaturedLayers");
+        featuredLayerStore.load();
 
-        // basic tabs 1, built from existing content
-        var tabsPanel = Ext.create('Ext.TabPanel', {
-            id : 'auscope-tabs-panel',
-            activeTab : 0,
-            region : 'center',
-            split : true,
-            height : '70%',
-            width : '100%',
-            enableTabScroll : true,
-            items:[
-                knownLayersPanel
-            ]
-        });
-
-        /* the footer, currently sits beneath tabsPanel */
-        var southPanel = {
-    		items : [{xtype: 'ANVGLFooter'}],
-    		layout : 'fit',
-            region :'south'
-        };
-
-        /**
-         * Used as a placeholder for the tree and details panel on the left of screen
-         */
-        var westPanel = {
-            layout: 'border',//VT: vbox doesn't support splitbar unless we custom it.
-            region:'west',
-            border: false,
-            split:true,
-            margin:'60 0 0 3',
-            width: 370,
-            items:[tabsPanel, southPanel]
-        };
-
-        /**
-         * This center panel will hold the google maps instance
-         */
-        var centerPanel = Ext.create('Ext.panel.Panel', {
-            region: 'center',
-            id: 'center_region',
-            margin: '60 0 0 0',
-            border: false,
-            html : "<div style='width:100%; height:100%' id='center_region-map'></div>",
-            listeners: {
-                afterrender: function () {    
-                    map.renderToContainer(centerPanel,'center_region-map');   //After our centerPanel is displayed, render our map into it                                     
-                    setDefaultBaseLayer();
-                }
-            }
+        // 'layers' wrapper
+        var featuredLayers = Ext.create("view.FeaturedLayers", {
+        	title : "Featured",
+        	tooltip : {
+        		 anchor : 'top',
+                 title : 'Featured Layers',
+                 text : '<p1>This is where the portal groups data services with a common theme under a layer. This allows you to interact with multiple data providers using a common interface.</p><br><p>The underlying data services are discovered from a remote registry. If no services can be found for a layer, it will be disabled.</p1>',
+                 showDelay : 100,
+                 icon : 'portal-core/img/information.png',
+                 dismissDelay : 30000
+        	},
+        	map : map,
+        	activelayerstore : layerStore,
+        	store : featuredLayerStore,
+        	layerFactory : layerFactory
         });
         
+        // tabs
+        var viewTabs = Ext.create("view.Tabs");
+        viewTabs.add([featuredLayers]);
+
+        // layers
+        var viewLayers = Ext.create("view.KnownLayers");
+        viewLayers.add(viewTabs);
         
-        /** set the default base layer of the map */
-		function setDefaultBaseLayer() {
-			try {
-				Ext.each(map.map.layers, function(layer) {
-			    	if (layer.name === defaultBaseLayer) {
-			    		map.map.setBaseLayer(layer);
-			    		return false;
-			    	}
-			    });
-			} catch (e) {
-				handleException.onFunction(arguments, e);
-			}
-		};
+        // map
+        var viewMap = Ext.create("anvgl.view.Map", {
+        	map: map, 
+        	defaultBaseLayerName : defaultBaseLayerName,
+        	layerStore: layerStore
+    	});
         
+        // footer
+        var viewFooter = Ext.create("view.Footer");
+        viewLayers.add(viewFooter);
         
-        /**
-         * Add all the panels to the viewport
-         */
-        var viewport = Ext.create('Ext.container.Viewport', {
+        var app = Ext.create('Ext.container.Viewport', {
             layout:'border',
-            items:[westPanel, centerPanel]
+            items:[viewLayers, viewMap]
         });
-
 
         // The subset button needs a handler for when the user draws a subset bbox on the map:
         map.on('dataSelect', function(map, bbox, intersectedRecords) {
