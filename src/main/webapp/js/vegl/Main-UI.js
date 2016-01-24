@@ -3,6 +3,18 @@ Ext.application({
 	
     appFolder: "js/vegl",
     
+    stores: [
+             "FeaturedLayers"
+         ],
+	
+	views: [
+	         "Header", 
+	         "FeaturedLayers", 
+	         "KnownLayers", 
+	         "Tabs",
+	         "Footer"
+        ],
+    
 	requires: ["anvgl.util.handleException"],
     
     launch : function() {
