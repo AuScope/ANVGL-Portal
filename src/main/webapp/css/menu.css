@@ -55,11 +55,12 @@
 	text-decoration: none;
 }
 
-.login-text a {
-	color: #ffffff;
-	font-style: normal;
-	font-weight: bold;
-	text-decoration: none;
+#permalink, #permanent-link {
+	position:absolute;
+    top: 80px;
+    right: 10px;
+    color: #15428B;
+    font: 12px Arial, Tahoma, Helvetica, sans-serif;
 }
 
 .login-widget {

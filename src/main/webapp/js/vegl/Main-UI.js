@@ -203,7 +203,7 @@ Ext.application({
         });
 
         //Create our permalink generation handler
-        var permalinkHandler = function() {
+        Ext.get('permanent-link').on('click', function() {
             var mss = Ext.create('portal.util.permalink.MapStateSerializer');
 
             mss.addMapState(map);
@@ -217,9 +217,8 @@ Ext.application({
 
                 popup.show();
             });
-        };
-        Ext.get('permalink').on('click', permalinkHandler);
-        Ext.get('permalinkicon').on('click', permalinkHandler);
+        });
+        
 
         //Handle deserialisation -- ONLY if we have a uri param called "state".
         var deserializationHandler;
