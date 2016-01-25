@@ -114,9 +114,34 @@ Ext.application({
             }
         };
 
+        // layers sorter, passed to the FeaturedLayers store as a config parameter
+        var layersSorter = new Ext.util.Sorter({
+            sorterFn: function(record1, record2) {
+                var order1 = (record1.data.order.length ? record1.data.order : record1.data.name);
+                var order2 = (record2.data.order.length ? record2.data.order : record2.data.name);
+                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
+            },
+            direction: 'ASC'
+        })
+        
+        // layers grouper, passed to the FeaturedLayers store as a config parameter
+        var layersGrouper = new Ext.util.Grouper({
+            groupFn: function(item) {
+                return item.data.group;
+            },
+            sorterFn: function(record1, record2) {
+            	var order1 = (record1.data.order.length ? record1.data.order : record1.data.group);
+            	var order2 = (record2.data.order.length ? record2.data.order : record2.data.group);
+                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
+            },
+            direction: 'ASC'
+        });
+        
         // featured layers store
-        var featuredLayerStore = Ext.create("store.FeaturedLayers");
-        featuredLayerStore.load();
+        var featuredLayerStore = Ext.create("store.FeaturedLayers", {
+        	layersGrouper : layersGrouper,
+            layersSorter : layersSorter
+        });
 
         // 'layers' wrapper
         var featuredLayers = Ext.create("view.FeaturedLayers", {

@@ -9,7 +9,6 @@ Ext.define('anvgl.store.FeaturedLayers', {
 	
 	model : 'portal.knownlayer.KnownLayer',
 	groupField : 'group',
-	autoLoad : false,
 	
     proxy : {
         reader : {
@@ -21,30 +20,18 @@ Ext.define('anvgl.store.FeaturedLayers', {
     },
     
     constructor : function(config) {
-    	
-    	/* this.sorters is currently running into an issue - getrange
-    	this.sorters = new Ext.util.Sorter({
-            sorterFn: function(record1, record2) {
-                var order1 = (record1.data.order.length ? record1.data.order : record1.data.name);
-                var order2 = (record2.data.order.length ? record2.data.order : record2.data.name);
-                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
-            },
-            direction: 'ASC'
-        });
-    	
-    	this.grouper = new Ext.util.Grouper({
-            groupFn: function(item) {
-                return item.data.group;
-            },
-            sorterFn: function(record1, record2) {
-            	var order1 = (record1.data.order.length ? record1.data.order : record1.data.group);
-            	var order2 = (record2.data.order.length ? record2.data.order : record2.data.group);
-                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
-            },
-            direction: 'ASC'
-        });
-    	 */
-    	
     	this.callParent(arguments);
+    	
+    	this.load();
+    	
+    	// group if specified
+    	if (config && config.layersGrouper) {
+    		this.group(config.layersGrouper);
+    	}
+    	
+    	// sort if specified
+    	if (config && config.layersSorter) {
+    		this.sort(config.layersSorter);
+    	}
     }
 });
