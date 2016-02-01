@@ -14,7 +14,7 @@ Ext.define("anvgl.view.Map", {
     
 	constructor: function(config) {
 		this.map = config.map;
-		this.defaultBaseLayerName = config.defaultBaseLayerName;
+		this.defaultBaseLayerName = config.defaultBaseLayerName || "";
 		this.map.layerStore = config.layerStore;
 		
     	this.callParent(arguments);
@@ -23,7 +23,10 @@ Ext.define("anvgl.view.Map", {
     listeners: {
     	afterrender: function () {
     		this.map.renderToContainer(Ext.get("center_region-map"),"center_region-map");
-    		this.setDefaultLayer(this.map, this.defaultBaseLayerName);
+    		
+    		if (this.defaultBaseLayerName.length > 0) {
+    			this.setDefaultLayer(this.map, this.defaultBaseLayerName);
+    		}
 		}
 	},
 
