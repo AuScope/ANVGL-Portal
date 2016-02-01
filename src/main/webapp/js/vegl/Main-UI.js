@@ -1,17 +1,28 @@
 Ext.application({
     name : "anvgl",
-
     appFolder : "js/vegl",
-    
-    stores : ["FeaturedLayers"],
-	views : ["Header", "FeaturedLayers", "KnownLayers", "Tabs", "Footer"],
-	requires : ["anvgl.util.handleException"],
+    stores : [
+              "FeaturedLayers"
+    ],
+	views : [
+	         "Header", 
+	         "FeaturedLayers", 
+	         "KnownLayers", 
+	         "Tabs", 
+	         "Footer"
+     ],
+     requires : [
+                 "anvgl.util.handleException"
+     ],
     
     launch : function() {
-    	
+    	// map
     	var map = null;
+    	
+    	// default base layer name
     	var defaultBaseLayerName = "Google Satellite";
-
+    	
+    	// instantiate exception handler
     	var handleException  = new anvgl.util.handleException();
     	
         //Send these headers with every AJax request we make...
@@ -19,8 +30,7 @@ Ext.application({
             'Accept-Encoding': 'gzip, deflate' //This ensures we use gzip for most of our requests (where available)
         };
 
-        //Create our store for holding the set of
-        //layers that have been added to the map
+        //Create our store for holding the set of layers that have been added to the map
         var layerStore = Ext.create('portal.layer.LayerStore', {});
 
         //We need something to handle the clicks on the map
@@ -168,7 +178,7 @@ Ext.application({
         var viewLayers = Ext.create("view.KnownLayers");
         viewLayers.add(viewTabs);
         
-        // map
+        // create map 
         var viewMap = Ext.create("anvgl.view.Map", {
         	map: map, 
         	defaultBaseLayerName : defaultBaseLayerName,
@@ -179,6 +189,7 @@ Ext.application({
         var viewFooter = Ext.create("view.Footer");
         viewLayers.add(viewFooter);
         
+        // create application view
         var app = Ext.create('Ext.container.Viewport', {
             layout:'border',
             items:[viewLayers, viewMap]
