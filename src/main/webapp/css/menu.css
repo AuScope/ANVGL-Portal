@@ -50,12 +50,7 @@
 	border-bottom-style: solid;
 }
 
-.menu-item a {
-	color: #ffffff;
-	text-decoration: none;
-}
-
-#permalink, #permanent-link {
+#permanent-link {
 	position:absolute;
     top: 80px;
     right: 10px;
