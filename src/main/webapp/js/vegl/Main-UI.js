@@ -132,7 +132,7 @@ Ext.application({
                 return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
             },
             direction: 'ASC'
-        })
+        });
         
         // layers grouper, passed to the FeaturedLayers store as a config parameter
         var layersGrouper = new Ext.util.Grouper({
@@ -142,7 +142,7 @@ Ext.application({
             sorterFn: function(record1, record2) {
             	var order1 = (record1.data.order.length ? record1.data.order : record1.data.group);
             	var order2 = (record2.data.order.length ? record2.data.order : record2.data.group);
-                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
+            	return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
             },
             direction: 'ASC'
         });
