@@ -8,7 +8,6 @@ Ext.define('anvgl.view.Tabs', {
 	extend			: "Ext.TabPanel",
 	
 	id 				: 'auscope-tabs-panel',
-	activeTab 		: 0,
 	enableTabScroll : true,
 	height 			: '70%',
     region 			: 'center',
@@ -18,5 +17,8 @@ Ext.define('anvgl.view.Tabs', {
     
     constructor 	: function(config) {
     	this.callParent(arguments);
+    	
+    	// always set the first tab active
+    	this.activeTab = 0;
     }
 });
