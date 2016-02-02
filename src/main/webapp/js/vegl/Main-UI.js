@@ -9,6 +9,7 @@ Ext.application({
 	         "FeaturedLayers", 
 	         "KnownLayers", 
 	         "Tabs", 
+	         "Map",
 	         "Footer"
      ],
      requires : [
@@ -64,66 +65,7 @@ Ext.application({
             querierFactory : Ext.create('vegl.layer.VeglQuerierFactory', {map: map}),
             rendererFactory : Ext.create('vegl.layer.VeglRendererFactory', {map: map})
         });
-
-        //Utility function for adding a new layer to the map
-        //record must be a CSWRecord or KnownLayer
-        var handleAddRecordToMap = function(sourceGrid, record) {
-        	console.log("handleAddRecordToMap called. **");
-            if (!(record instanceof Array)) {
-                record = [record];
-            }
-
-            for( var z = 0; z < record.length; z++) {
-                var newLayer = null;
-
-                //Ensure the layer DNE first
-                var existingRecord = layerStore.getById(record[z].get('id'));
-                if (existingRecord) {
-                    layersPanel.getSelectionModel().select([existingRecord], false);
-                    return;
-                 }
-
-                //Turn our KnownLayer/CSWRecord into an actual Layer
-                if (record[z] instanceof portal.csw.CSWRecord) {
-                    newLayer = record[z].get('layer');
-                } else {
-                    newLayer = record[z].get('layer');
-                }
-
-                //if newLayer is undefined, it must have come from some other source like mastercatalogue
-                if (!newLayer){
-                    newLayer = layerFactory.generateLayerFromCSWRecord(record[z])
-                    //we want it to display immediately.
-                    newLayer.set('displayed',true);
-                }
-
-                //We may need to show a popup window with copyright info
-                var cswRecords = newLayer.get('cswRecords');
-                for (var i = 0; i < cswRecords.length; i++) {
-                    if (cswRecords[i].hasConstraints()) {
-                        var popup = Ext.create('portal.widgets.window.CSWRecordConstraintsWindow', {
-                            width : 625,
-                            cswRecords : cswRecords
-                        });
-
-                        popup.show();
-
-                        //HTML images may take a moment to load which stuffs up our layout
-                        //This is a horrible, horrible workaround.
-                        var task = new Ext.util.DelayedTask(function(){
-                            popup.doLayout();
-                        });
-                        task.delay(1000);
-
-                        break;
-                    }
-                }
-
-                layerStore.insert(0,newLayer); //this adds the layer to our store
-                layersPanel.getSelectionModel().select([newLayer], false); //this ensures it gets selected
-            }
-        };
-
+        
         // layers sorter, passed to the FeaturedLayers store as a config parameter
         var layersSorter = new Ext.util.Sorter({
             sorterFn: function(record1, record2) {
