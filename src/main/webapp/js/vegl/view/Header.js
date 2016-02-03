@@ -1,7 +1,7 @@
 /**
  * @class Header
  * @extends Ext.panel.Panel
- * @classdesc 'to-be' application header, not currently referenced. The header 'as-is' is a JSP include on <body>. 
+ * @classdesc 'to-be' application header, and is not currently referenced. The header 'as-is' is a JSP include on <body>. 
  */
 Ext.define("anvgl.view.Header", {
     extend	: "Ext.panel.Panel",

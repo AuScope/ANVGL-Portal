@@ -1,3 +1,7 @@
+/**
+ * @class handleException
+ * @classdesc exception handling 
+ */
 Ext.define("anvgl.util.handleException", function() {
     // constructor: do nothing
     var constructor = function() {};

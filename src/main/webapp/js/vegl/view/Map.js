@@ -1,6 +1,7 @@
 /**
  * @class Maps
  * @extends Ext.panel.Panel
+ * @classdesc view - Map
  * 
  */
 Ext.define("anvgl.view.Map", {
@@ -22,6 +23,7 @@ Ext.define("anvgl.view.Map", {
     listeners: {
         afterrender: function () {
             this.map.renderToContainer(Ext.get("center_region-map"),"center_region-map");
+            
             if (this.defaultBaseLayerName.length > 0) {
                 this.setDefaultLayer(this.map, this.defaultBaseLayerName);
             }

@@ -1,6 +1,8 @@
 /**
-  * the footer 
-  */
+ * @class Footer
+ * @extends Ext.panel.Panel
+ * @classdesc view - footer 
+ */
 Ext.define("anvgl.view.Footer", {
     extend	: "Ext.panel.Panel",
     alias	: "view.Footer",

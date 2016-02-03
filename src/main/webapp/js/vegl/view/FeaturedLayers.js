@@ -1,3 +1,7 @@
+/**
+ * @class handleException
+ * @classdesc view - featured layers 
+ */
 Ext.define('anvgl.view.FeaturedLayers', {
 	extend : "portal.widgets.panel.KnownLayerPanel",
 	alias : "view.FeaturedLayers",

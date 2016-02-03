@@ -1,6 +1,7 @@
 /**
  * @class Tabs
  * @extends Ext.TabPanel
+ * @classdesc view - tabs
  * 
  */
 Ext.define('anvgl.view.Tabs', {

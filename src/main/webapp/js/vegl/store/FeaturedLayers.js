@@ -1,7 +1,7 @@
 /**
  * @class FeaturedLayers
  * @extends Ext.data.Store
- * @classdesc Featured Layer Store: When instantiated does not load the store automatically (autoLoad: false) 
+ * @classdesc Featured Layer Store 
  */
 Ext.define('anvgl.store.FeaturedLayers', {
 	extend : 'Ext.data.Store',
