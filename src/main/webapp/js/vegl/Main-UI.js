@@ -1,45 +1,58 @@
 Ext.application({
+    /** @lends anvgl */
+    
+    /** application name */
     name : "anvgl",
+    
+    /** ExtJS application folder */
     appFolder : "js/vegl",
-    stores : [
-              "FeaturedLayers"
-    ],
-	views : [
-	         "Header", 
-	         "FeaturedLayers", 
-	         "KnownLayers", 
-	         "Tabs", 
-	         "Map",
-	         "Footer"
-     ],
-     requires : [
-                 "anvgl.util.handleException"
+    
+    /** models / stores */
+    stores : ["FeaturedLayers"],
+    
+    /** views */
+    views : [
+             "Header", 
+             "FeaturedLayers", 
+             "KnownLayers", 
+             "Tabs", 
+             "Map",
+             "Footer"
      ],
     
+    /** dependencies register */
+    requires : ["anvgl.util.handleException"],
+    
+    /**
+      * application bootstraps
+      * @constructs 
+      *  
+      */
     launch : function() {
-    	// map
-    	var map = null;
-    	
-    	// default base layer name
-    	var defaultBaseLayerName = "Google Satellite";
-    	
-    	// instantiate exception handler
-    	var handleException  = new anvgl.util.handleException();
-    	
-        //Send these headers with every AJax request we make...
+        /** map */
+        var map = null;
+        
+        /** default base layer name */
+        var defaultBaseLayerName = "Google Satellite";
+        
+        /** instantiate exception handler */
+        var handleException  = new anvgl.util.handleException();
+        
+        /** send these headers with every AJax request we make to ensure we use gzip for most of our requests (where available)*/
         Ext.Ajax.defaultHeaders = {
-            'Accept-Encoding': 'gzip, deflate' //This ensures we use gzip for most of our requests (where available)
+            'Accept-Encoding': 'gzip, deflate' 
         };
 
-        //Create our store for holding the set of layers that have been added to the map
+        /** create our store for holding the set of layers that have been added to the map */
         var layerStore = Ext.create('portal.layer.LayerStore', {});
 
-        //We need something to handle the clicks on the map
+        /** we need something to handle the clicks on the map */
         var queryTargetHandler = Ext.create('portal.layer.querier.QueryTargetHandler', {});
-
-        //Create our map implementations
+        
+        
+        /** create our map implementations */
         var mapCfg = {
-            container : null,   //We will be performing a delayed render of this map
+            container : null,   /** We will be performing a delayed render of this map */
             layerStore : layerStore,
             allowDataSelection : true,
             listeners : {
@@ -66,7 +79,7 @@ Ext.application({
             rendererFactory : Ext.create('vegl.layer.VeglRendererFactory', {map: map})
         });
         
-        // layers sorter, passed to the FeaturedLayers store as a config parameter
+        /** layers sorter, passed to the FeaturedLayers store as a config parameter */
         var layersSorter = new Ext.util.Sorter({
             sorterFn: function(record1, record2) {
                 var order1 = (record1.data.order.length ? record1.data.order : record1.data.name);
@@ -76,70 +89,73 @@ Ext.application({
             direction: 'ASC'
         });
         
-        // layers grouper, passed to the FeaturedLayers store as a config parameter
+        /** layers grouper, passed to the FeaturedLayers store as a config parameter */
         var layersGrouper = new Ext.util.Grouper({
             groupFn: function(item) {
                 return item.data.group;
             },
             sorterFn: function(record1, record2) {
-            	var order1 = (record1.data.order.length ? record1.data.order : record1.data.group);
-            	var order2 = (record2.data.order.length ? record2.data.order : record2.data.group);
-            	return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
+                var order1 = (record1.data.order.length ? record1.data.order : record1.data.group);
+                var order2 = (record2.data.order.length ? record2.data.order : record2.data.group);
+                return order1 > order2 ? 1 : (order1 < order2 ? -1 : 0);
             },
             direction: 'ASC'
         });
         
-        // featured layers store
+        /** featured layers store  */
         var featuredLayerStore = Ext.create("store.FeaturedLayers", {
-        	layersGrouper : layersGrouper,
+            layersGrouper : layersGrouper,
             layersSorter : layersSorter
         });
 
-        // 'layers' wrapper
+        /** 'layers' wrapper */
         var featuredLayers = Ext.create("view.FeaturedLayers", {
-        	title : "Featured",
-        	tooltip : {
-        		 anchor : 'top',
+            title : "Featured",
+            tooltip : {
+                 anchor : 'top',
                  title : 'Featured Layers',
                  text : '<p1>This is where the portal groups data services with a common theme under a layer. This allows you to interact with multiple data providers using a common interface.</p><br><p>The underlying data services are discovered from a remote registry. If no services can be found for a layer, it will be disabled.</p1>',
                  showDelay : 100,
                  icon : 'portal-core/img/information.png',
                  dismissDelay : 30000
-        	},
-        	map : map,
-        	activelayerstore : layerStore,
-        	store : featuredLayerStore,
-        	layerFactory : layerFactory
+            },
+            map : map,
+            activelayerstore : layerStore,
+            store : featuredLayerStore,
+            layerFactory : layerFactory
         });
         
-        // tabs
+        /** tabs view */
         var viewTabs = Ext.create("view.Tabs");
         viewTabs.add([featuredLayers]);
 
-        // layers
+      /** layers view */
         var viewLayers = Ext.create("view.KnownLayers");
         viewLayers.add(viewTabs);
         
-        // create map 
+        /** map view */
         var viewMap = Ext.create("anvgl.view.Map", {
-        	map: map, 
-        	defaultBaseLayerName : defaultBaseLayerName,
-        	layerStore: layerStore
-    	});
+            map: map, 
+            defaultBaseLayerName : defaultBaseLayerName,
+            layerStore: layerStore
+        });
         
-        // footer
+        /** footer view */
         var viewFooter = Ext.create("view.Footer");
         viewLayers.add(viewFooter);
         
-        // create application view
+        /** application view */
         var app = Ext.create('Ext.container.Viewport', {
             layout:'border',
             items:[viewLayers, viewMap]
         });
-
-        // The subset button needs a handler for when the user draws a subset bbox on the map:
+        
+        /** 
+          * the subset button needs a handler for when the user draws a subset bbox on the map:
+          * @event
+          */
         map.on('dataSelect', function(map, bbox, intersectedRecords) {
-          //Show a dialog allow users to confirm the selected data sources
+          /** show a dialog allow users to confirm the selected data sources */
           if (intersectedRecords.length > 0) {
               Ext.create('Ext.Window', {
                   width : 710,
@@ -180,7 +196,7 @@ Ext.application({
 
         });
 
-        //Create our permalink generation handler
+        /** create our permalink generation handler */
         Ext.get('permanent-link').on('click', function() {
             var mss = Ext.create('portal.util.permalink.MapStateSerializer');
 
@@ -198,7 +214,7 @@ Ext.application({
         });
         
 
-        //Handle deserialisation -- ONLY if we have a uri param called "state".
+        /** handle deserialisation -- ONLY if we have a uri param called "state". */
         var deserializationHandler;
         var urlParams = Ext.Object.fromQueryString(window.location.search.substring(1));
         if (urlParams && (urlParams.state || urlParams.s)) {
