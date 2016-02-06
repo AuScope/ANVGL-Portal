@@ -1,11 +1,18 @@
 /**
- * @class handleException
- * @classdesc view - featured layers 
+ * @class
  */
 Ext.define('anvgl.view.FeaturedLayers', {
-	extend : "portal.widgets.panel.KnownLayerPanel",
+    /** @lends FeaturedLayers */
+    
+    extend : "portal.widgets.panel.KnownLayerPanel",
 	alias : "view.FeaturedLayers",
 
+	 /**
+       * featured layers view
+       * @constructs 
+       * @param {object} config
+       *  
+       */
 	constructor : function (config) {
     	this.title = config.title;
     	this.tooltip = config.tooltip;

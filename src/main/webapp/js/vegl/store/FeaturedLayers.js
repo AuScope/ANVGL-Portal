@@ -1,15 +1,17 @@
 /**
- * @class FeaturedLayers
+ * @class
  * @extends Ext.data.Store
  * @classdesc Featured Layer Store 
  */
 Ext.define('anvgl.store.FeaturedLayers', {
-	extend : 'Ext.data.Store',
-	alias : "store.FeaturedLayers",
-	
-	model : 'portal.knownlayer.KnownLayer',
-	groupField : 'group',
-	
+     /** @lends FeaturedLayers */
+    
+    extend : 'Ext.data.Store',
+    alias : "store.FeaturedLayers",
+    
+    model : 'portal.knownlayer.KnownLayer',
+    groupField : 'group',
+    
     proxy : {
         reader : {
             type : 'json',
@@ -19,19 +21,24 @@ Ext.define('anvgl.store.FeaturedLayers', {
         url : 'getKnownLayers.do'
     },
     
+    /**
+     * load the 'featured layers' store and work out any configuration for sorting and grouping
+     * @constructs 
+     *  
+     */
     constructor : function(config) {
-    	this.callParent(arguments);
-    	
-    	this.load();
-    	
-    	// group if specified
-    	if (config && config.layersGrouper) {
-    		this.group(config.layersGrouper);
-    	}
-    	
-    	// sort if specified
-    	if (config && config.layersSorter) {
-    		this.sort(config.layersSorter);
-    	}
+        this.callParent(arguments);
+        
+        this.load();
+        
+        // group if specified
+        if (config && config.layersGrouper) {
+            this.group(config.layersGrouper);
+        }
+        
+        // sort if specified
+        if (config && config.layersSorter) {
+            this.sort(config.layersSorter);
+        }
     }
 });
