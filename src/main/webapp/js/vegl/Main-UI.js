@@ -1,16 +1,17 @@
 Ext.application({
     /** @lends anvgl */
     
-    /** application name */
+    // application name
     name : "anvgl",
     
-    /** ExtJS application folder */
+    // ExtJS application folder
+    // Used to hook the application name to a base folder for namespaces
     appFolder : "js/vegl",
     
-    /** models / stores */
+    // models / stores
     stores : ["FeaturedLayers"],
     
-    /** views */
+    // views
     views : [
              "Header", 
              "FeaturedLayers", 
@@ -20,37 +21,40 @@ Ext.application({
              "Footer"
      ],
     
-    /** dependencies register */
+    // dependencies register
     requires : ["anvgl.util.handleException"],
     
     /**
-      * application bootstraps
+      * Application launch.
+      * Here we build our GUI from existing components - this function should only be assembling the GUI
+      * Any processing logic should be managed in dedicated classes - don't let this become a
+      * monolithic 'do everything' function
+      * 
       * @constructs 
       *  
       */
     launch : function() {
-        /** map */
+        // map
         var map = null;
         
-        /** default base layer name */
+        // default base layer name
         var defaultBaseLayerName = "Google Satellite";
         
-        /** instantiate exception handler */
+        // instantiate exception handler
         var handleException  = new anvgl.util.handleException();
         
-        /** send these headers with every AJax request we make to ensure we use gzip for most of our requests (where available)*/
+        // send these headers with every AJax request we make to ensure we use gzip for most of our requests (where available)*/
         Ext.Ajax.defaultHeaders = {
             'Accept-Encoding': 'gzip, deflate' 
         };
 
-        /** create our store for holding the set of layers that have been added to the map */
+        // create our store for holding the set of layers that have been added to the map
         var layerStore = Ext.create('portal.layer.LayerStore', {});
 
-        /** we need something to handle the clicks on the map */
+        // we need something to handle the clicks on the map
         var queryTargetHandler = Ext.create('portal.layer.querier.QueryTargetHandler', {});
         
-        
-        /** create our map implementations */
+        // create our map implementations
         var mapCfg = {
             container : null,   /** We will be performing a delayed render of this map */
             layerStore : layerStore,
@@ -79,7 +83,7 @@ Ext.application({
             rendererFactory : Ext.create('vegl.layer.VeglRendererFactory', {map: map})
         });
         
-        /** layers sorter, passed to the FeaturedLayers store as a config parameter */
+        // layers sorter, passed to the FeaturedLayers store as a config parameter
         var layersSorter = new Ext.util.Sorter({
             sorterFn: function(record1, record2) {
                 var order1 = (record1.data.order.length ? record1.data.order : record1.data.name);
@@ -89,7 +93,7 @@ Ext.application({
             direction: 'ASC'
         });
         
-        /** layers grouper, passed to the FeaturedLayers store as a config parameter */
+        // layers grouper, passed to the FeaturedLayers store as a config parameter
         var layersGrouper = new Ext.util.Grouper({
             groupFn: function(item) {
                 return item.data.group;
@@ -102,13 +106,13 @@ Ext.application({
             direction: 'ASC'
         });
         
-        /** featured layers store  */
+        // featured layers store
         var featuredLayerStore = Ext.create("store.FeaturedLayers", {
             layersGrouper : layersGrouper,
             layersSorter : layersSorter
         });
 
-        /** 'layers' wrapper */
+        // 'layers' wrapper
         var featuredLayers = Ext.create("view.FeaturedLayers", {
             title : "Featured",
             tooltip : {
@@ -125,35 +129,32 @@ Ext.application({
             layerFactory : layerFactory
         });
         
-        /** tabs view */
+        // tabs view
         var viewTabs = Ext.create("view.Tabs");
         viewTabs.add([featuredLayers]);
 
-      /** layers view */
+       // layers view
         var viewLayers = Ext.create("view.KnownLayers");
         viewLayers.add(viewTabs);
         
-        /** map view */
+        // map view
         var viewMap = Ext.create("anvgl.view.Map", {
             map: map, 
             defaultBaseLayerName : defaultBaseLayerName,
             layerStore: layerStore
         });
         
-        /** footer view */
+        // footer view
         var viewFooter = Ext.create("view.Footer");
         viewLayers.add(viewFooter);
         
-        /** application view */
+        // application view
         var app = Ext.create('Ext.container.Viewport', {
             layout:'border',
             items:[viewLayers, viewMap]
         });
         
-        /** 
-          * the subset button needs a handler for when the user draws a subset bbox on the map:
-          * @event
-          */
+        // the subset button needs a handler for when the user draws a subset bbox on the map:
         map.on('dataSelect', function(map, bbox, intersectedRecords) {
           /** show a dialog allow users to confirm the selected data sources */
           if (intersectedRecords.length > 0) {
@@ -196,7 +197,7 @@ Ext.application({
 
         });
 
-        /** create our permalink generation handler */
+        // create our permalink generation handler
         Ext.get('permanent-link').on('click', function() {
             var mss = Ext.create('portal.util.permalink.MapStateSerializer');
 
@@ -213,8 +214,7 @@ Ext.application({
             });
         });
         
-
-        /** handle deserialisation -- ONLY if we have a uri param called "state". */
+        // handle de-serialisation -- ONLY if we have a uri param called "state"
         var deserializationHandler;
         var urlParams = Ext.Object.fromQueryString(window.location.search.substring(1));
         if (urlParams && (urlParams.state || urlParams.s)) {

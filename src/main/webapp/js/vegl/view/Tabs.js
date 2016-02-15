@@ -1,10 +1,6 @@
-/**
- * @class Tabs
- * @extends Ext.TabPanel
- * @classdesc view - tabs
- * 
- */
 Ext.define('anvgl.view.Tabs', {
+    /** @lends view.Tabs */
+    
 	alias			: "view.Tabs",
 	extend			: "Ext.TabPanel",
 	
@@ -16,6 +12,12 @@ Ext.define('anvgl.view.Tabs', {
     width 			: '100%',
     margin			: '100 0 0 0',
     
+    /**
+     * Extends 'Ext.TabPanel to create a 'view' on the map interface to holds all tabs.
+     * The active tab is not passed in as a configuration and at this stage the first is always active by default
+     * @constructs
+     * @param {object} config
+     */
     constructor 	: function(config) {
     	this.callParent(arguments);
     	

@@ -1,22 +1,24 @@
-/**
- * @class handleException
- * @classdesc exception handling 
- */
-Ext.define("anvgl.util.handleException", function() {
-    // constructor: do nothing
-    var constructor = function() {};
+Ext.define("anvgl.util.handleException", {
+    /** @lends util.handleException */
+    
+    /**
+     * Creates the Exception Handling module.
+     * At this stage has some basic exception handling and can be extended to be more useful 
+     * @constructs
+     */
+    constructor : function() {},
 
-    //  logs the exception to the console
-    var onFunction = function(f, e) {
+    /**
+     * Details on an exception on a specific function.
+     * At this stage it logs out the function name and the exception details
+     * @function
+     * @param {function} f 
+     * @param {object} e 
+     */
+    onFunction : function(f, e) {
         console.log("**************************************************************");
         console.log("An exception has been caught on function '" + f.callee.name + "()'.");
         console.log(e);
         console.log("**************************************************************");
-    };
-
-    /** public interface to the class */
-    return {
-        constructor : constructor,
-        onFunction : onFunction
     }
 });

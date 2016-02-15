@@ -1,10 +1,5 @@
-/**
- * @class
- * @extends Ext.data.Store
- * @classdesc Featured Layer Store 
- */
 Ext.define('anvgl.store.FeaturedLayers', {
-     /** @lends FeaturedLayers */
+     /** @lends store.FeaturedLayers */
     
     extend : 'Ext.data.Store',
     alias : "store.FeaturedLayers",
@@ -22,9 +17,15 @@ Ext.define('anvgl.store.FeaturedLayers', {
     },
     
     /**
-     * load the 'featured layers' store and work out any configuration for sorting and grouping
+     * Loads the 'featured layers' store and work out any configuration for sorting and grouping
      * @constructs 
-     *  
+     * @example
+     *  var featuredLayerStore = Ext.create("store.FeaturedLayers", {
+     *      layersGrouper : layersGrouper,
+     *          layersSorter : layersSorter
+     *  });
+     * 
+     * @param {object} config
      */
     constructor : function(config) {
         this.callParent(arguments);
