@@ -315,6 +315,9 @@ Ext.define('vegl.widgets.JobsPanel', {
      * series - either a vegl.models.Series object
      */
     listJobsForSeries : function(series, forceStatusRefresh) {
+        
+        console.log("Going to make the ajax call and fetch jobs for series - " + series.get('id'));
+        
         this.currentSeries = series;
         var store = this.getStore();
         var ajaxProxy = store.getProxy();
@@ -323,6 +326,8 @@ Ext.define('vegl.widgets.JobsPanel', {
             ajaxProxy.extraParams.forceStatusRefresh = true;
         }
         store.load();
+        
+        console.log("done.");
     },
 
     /**
@@ -451,10 +456,12 @@ Ext.define('vegl.widgets.JobsPanel', {
                     duplicateJobId : job.get('id'),
                     userAction : 'duplicate'
                 },
-                forms : ['vegl.jobwizard.forms.DuplicateJobForm',
-                         'vegl.jobwizard.forms.JobObjectForm',
+                forms : [
+                         'vegl.jobwizard.forms.DuplicateJobForm',
                          'vegl.jobwizard.forms.ScriptBuilderForm',
-                         'vegl.jobwizard.forms.JobSubmitForm']
+                         'vegl.jobwizard.forms.JobObjectForm',
+                         'vegl.jobwizard.forms.JobSubmitForm'
+                 ]
             }]
         });
 
@@ -490,10 +497,12 @@ Ext.define('vegl.widgets.JobsPanel', {
                     seriesId : job.get('seriesId'),
                     userAction : 'edit'
                 },
-                forms : ['vegl.jobwizard.forms.JobObjectForm',
+                forms : [
+                         'vegl.jobwizard.forms.JobObjectForm',
                          'vegl.jobwizard.forms.JobUploadForm',
                          'vegl.jobwizard.forms.ScriptBuilderForm',
-                         'vegl.jobwizard.forms.JobSubmitForm']
+                         'vegl.jobwizard.forms.JobSubmitForm'
+                 ]
             }]
         });
 
