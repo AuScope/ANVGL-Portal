@@ -69,11 +69,10 @@ Ext.application({
         var urlParams = Ext.Object.fromQueryString(window.location.search.substring(1));
         var isDebugMode = urlParams.debug;
         
-        if (urlParams && urlParams.map && urlParams.map === 'googleMap') {
-            map = Ext.create('portal.map.gmap.GoogleMap', mapCfg);
-        } else {
-            map = Ext.create('portal.map.openlayers.OpenLayersMap', mapCfg);
-        }
+        // it is always an OpenLayersMap at this stage
+        // the support for GoogleMap was taken off, see commit 54519f72af3f3f1f2e9d2e3837c194c284803622
+        map = Ext.create('portal.map.openlayers.OpenLayersMap', mapCfg);
+        
 
         var layerFactory = Ext.create('portal.layer.LayerFactory', {
             map : map,
