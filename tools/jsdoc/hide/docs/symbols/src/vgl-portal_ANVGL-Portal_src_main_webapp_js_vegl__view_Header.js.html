@@ -1,0 +1,24 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="NAME">Ext.define</span><span class="PUNC">(</span><span class="STRN">"anvgl.view.Header"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  2</span> </span><span class="WHIT"> </span><span class="COMM">/** @lends view.Header */</span><span class="WHIT">
+<span class='line'>  3</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>  4</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>  5</span>      * Renders the header component of the application.
+<span class='line'>  6</span>      * Presently the class is not used, and the header is generated using a JSP include on the templates.
+<span class='line'>  7</span>      * At some stage it could make an AJAX call and render the header component
+<span class='line'>  8</span>      * @constructs
+<span class='line'>  9</span>      */</span><span class="WHIT">  </span><span class="WHIT">
+<span class='line'> 10</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 11</span> </span><span class="WHIT">        </span><span class="NAME">this.callParent</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">    </span><span class="NAME">extend</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"Ext.panel.Panel"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">    </span><span class="NAME">alias</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"view.Header"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">    </span><span class="NAME">id</span><span class="WHIT">		</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"anvgl-header"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
