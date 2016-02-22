@@ -1,0 +1,33 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * Class for transforming a W3C DOM Document into a GenericParserComponent
+<span class='line'>  3</span>  * by utilising a number of 'plugin' factories.
+<span class='line'>  4</span>  */</span><span class="WHIT">
+<span class='line'>  5</span> </span><span class="NAME">Ext.define</span><span class="PUNC">(</span><span class="STRN">'vegl.layer.querier.wfs.VeglParser'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  6</span> </span><span class="WHIT">    </span><span class="NAME">extend</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'portal.layer.querier.wfs.Parser'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>  9</span>      * Builds a new Parser from a list of factories. Factories in factoryList will be tested before
+<span class='line'> 10</span>      * the items in factoryNames
+<span class='line'> 11</span>      *
+<span class='line'> 12</span>      * {
+<span class='line'> 13</span>      *  factoryNames : String[] - an array of class names which will be instantiated as portal.layer.querier.wfs.factories.BaseFactory objects
+<span class='line'> 14</span>      *  factoryList : portal.layer.querier.wfs.factories.BaseFactory[] - an array of already instantiated factory objects
+<span class='line'> 15</span>      * }
+<span class='line'> 16</span>      */</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">config</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">        </span><span class="NAME">Ext.apply</span><span class="PUNC">(</span><span class="NAME">config</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">            </span><span class="NAME">factoryNames</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">                </span><span class="STRN">'portal.layer.querier.wfs.factories.SimpleFactory'</span><span class="WHIT"> </span><span class="COMM">//The simple factory should always go last</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">            </span><span class="PUNC">]</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 23</span> 
+<span class='line'> 24</span> </span><span class="WHIT">        </span><span class="NAME">this.callParent</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
