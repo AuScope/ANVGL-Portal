@@ -1,0 +1,37 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="NAME">Ext.define</span><span class="PUNC">(</span><span class="STRN">"anvgl.view.Footer"</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  2</span> </span><span class="WHIT">    </span><span class="COMM">/** @lends view.Footer */</span><span class="WHIT">
+<span class='line'>  3</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>  4</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>  5</span>      * Renders the footer components of the application.
+<span class='line'>  6</span>      * At this stage it is a static list comprised of partner logos on the map interface
+<span class='line'>  7</span>      * @constructs
+<span class='line'>  8</span>      * 
+<span class='line'>  9</span>      * @example
+<span class='line'> 10</span>      * &#60;ul>
+<span class='line'> 11</span>      *  &#60;li>&#60;img id='img-gswa' src='img/logos/geographical-survey-of-western-australia.jpg' alt='Geographical Survey of Wstern Australia' />&#60;/li>
+<span class='line'> 12</span>      *  &#60;li>&#60;img id='img-eic' src='img/logos/exploration-incentive-scheme.jpg' alt='Exploration Incentive Scheme' />&#60;/li>
+<span class='line'> 13</span>      * &#60;/ul> 
+<span class='line'> 14</span>      */</span><span class="WHIT">  </span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">        </span><span class="NAME">this.callParent</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">    </span><span class="NAME">extend</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"Ext.panel.Panel"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 20</span> </span><span class="WHIT">    </span><span class="NAME">alias</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"view.Footer"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">    </span><span class="NAME">height</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">90</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="WHIT">    </span><span class="NAME">region</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"south"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">    </span><span class="NAME">html</span><span class="WHIT">	</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"&lt;ul>"</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">                </span><span class="PUNC">+</span><span class="WHIT"> 	</span><span class="STRN">"&lt;li>&lt;img id='img-gswa' src='img/logos/geographical-survey-of-western-australia.jpg' alt='Geographical Survey of Western Australia' />&lt;/li>"</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">                </span><span class="PUNC">+</span><span class="WHIT"> 	</span><span class="STRN">"&lt;li>&lt;img id='img-eic' src='img/logos/exploration-incentive-scheme.jpg' alt='Exploration Incentive Scheme' />&lt;/li>"</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">            </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="STRN">"&lt;/ul>"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">            </span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">    </span><span class="NAME">id</span><span class="WHIT">		</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"anvgl-footer"</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>

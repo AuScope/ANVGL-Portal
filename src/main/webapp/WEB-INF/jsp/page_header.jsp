@@ -36,8 +36,7 @@
 	</div>
 	
 	<div id="latlng"></div>
-	<%if (request.getRequestURL().toString().contains("/gmap.jsp")) {%>
-    <div id="permalinkicon"><a href="javascript:void(0)"><img src="portal-core/img/link.png" width="16" height="16"/></a></div>
-    <div id="permalink"><a href="javascript:void(0)">Permanent Link</a></div>
-    <%} %>
+      <%if (request.getRequestURL().toString().contains("/gmap.jsp")) {%>
+          <div id="permanent-link"><a href="javascript:void(0)"><img src="portal-core/img/link.png" width="16" height="16"/>Permanent Link</a></div>
+      <%} %>
 </div>

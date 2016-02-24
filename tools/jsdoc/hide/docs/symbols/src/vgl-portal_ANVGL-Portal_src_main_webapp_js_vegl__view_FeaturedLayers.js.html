@@ -1,0 +1,49 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="NAME">Ext.define</span><span class="PUNC">(</span><span class="STRN">'anvgl.view.FeaturedLayers'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>  2</span> </span><span class="WHIT">    </span><span class="COMM">/** @lends view.FeaturedLayers */</span><span class="WHIT">
+<span class='line'>  3</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>  4</span> </span><span class="WHIT">    </span><span class="NAME">extend</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"portal.widgets.panel.KnownLayerPanel"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  5</span> </span><span class="WHIT">    </span><span class="NAME">alias</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">"view.FeaturedLayers"</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>  6</span> 
+<span class='line'>  7</span> </span><span class="WHIT">     </span><span class="COMM">/**
+<span class='line'>  8</span>        * Extends 'portal.widgets.panel.KnownLayerPanel' and provides for the title, layer stores and other configuration
+<span class='line'>  9</span>        * @constructs
+<span class='line'> 10</span>        * 
+<span class='line'> 11</span>        * @example
+<span class='line'> 12</span>        * var featuredLayers = Ext.create("view.FeaturedLayers", {
+<span class='line'> 13</span>        *     title : "Featured",
+<span class='line'> 14</span>        *     tooltip : {
+<span class='line'> 15</span>        *          anchor : 'top',
+<span class='line'> 16</span>        *          title : 'Featured Layers',
+<span class='line'> 17</span>        *          text : '&lt;p1>This is where the portal groups data services with a common theme under a layer. This allows you to interact with multiple data providers using a common interface.&lt;/p>&lt;br>&lt;p>The underlying data services are discovered from a remote registry. If no services can be found for a layer, it will be disabled.&lt;/p1>',
+<span class='line'> 18</span>        *          showDelay : 100,
+<span class='line'> 19</span>        *          icon : 'portal-core/img/information.png',
+<span class='line'> 20</span>        *          dismissDelay : 30000
+<span class='line'> 21</span>        *     },
+<span class='line'> 22</span>        *     map : map,
+<span class='line'> 23</span>        *     activelayerstore : layerStore,
+<span class='line'> 24</span>        *     store : featuredLayerStore,
+<span class='line'> 25</span>        *     layerFactory : layerFactory
+<span class='line'> 26</span>        * });
+<span class='line'> 27</span>        *  
+<span class='line'> 28</span>        * @param {object} config
+<span class='line'> 29</span>        */</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">    </span><span class="NAME">constructor</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">config</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">        </span><span class="NAME">this.title</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.title</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">        </span><span class="NAME">this.tooltip</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.tooltip</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">        </span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">        </span><span class="NAME">this.map</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.map</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="WHIT">        </span><span class="NAME">this.store</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.store</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">        </span><span class="NAME">this.activelayerstore</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.activelayerstore</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">        </span><span class="NAME">this.layerFactory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">config.layerFactory</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">        </span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">        </span><span class="COMM">// execute the parent class</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">        </span><span class="NAME">this.callParent</span><span class="PUNC">(</span><span class="NAME">arguments</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span></pre></body></html>
