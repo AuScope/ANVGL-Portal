@@ -37,9 +37,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -1175,11 +1172,5 @@ public class TestJobListController extends PortalTestClass {
 
         Assert.assertArrayEquals(data1, fis1Data);
         Assert.assertArrayEquals(data2, fis2Data);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(value =  org.springframework.http.HttpStatus.FORBIDDEN)
-    public @ResponseBody String handleException(AccessDeniedException e) {
-        return e.getMessage();
     }
 }
