@@ -48,8 +48,8 @@ import org.auscope.portal.server.vegl.VGLQueueJob;
 import org.auscope.portal.server.web.security.ANVGLUser;
 import org.auscope.portal.server.web.service.monitor.VGLJobStatusChangeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -88,7 +88,7 @@ public class JobListController extends BaseCloudController  {
     private VGLPollingJobQueueManager vglPollingJobQueueManager;
 
     private String adminEmail=null;
-    
+
     /**
      * @return the adminEmail
      */
@@ -142,93 +142,6 @@ public class JobListController extends BaseCloudController  {
 
     }
 
-    /**
-     * Attempts to get a job with a particular ID. If the job ID does NOT belong to the current
-     * user session null will be returned.
-     *
-     * This function will log all appropriate errors.
-     * @param jobId
-     * @return The VEGLJob object on success or null otherwise.
-     */
-    private VEGLJob attemptGetJob(Integer jobId, ANVGLUser user) {
-        logger.info("Getting job with ID " + jobId);
-
-        VEGLJob job = null;
-
-        //Check we have a user email
-        if (user == null || user.getEmail() == null) {
-            logger.warn("The current session is missing an email attribute");
-            return null;
-        }
-
-        //Attempt to fetch our job
-        if (jobId != null) {
-            try {
-                job = jobManager.getJobById(jobId.intValue(), user);
-                logger.debug("Job [" + job.hashCode() + "] retrieved by jobManager [" + jobManager.hashCode() + "]");
-            } catch (AccessDeniedException e) {
-                throw e;
-            } catch (Exception ex) {
-                logger.error(String.format("Exception when accessing jobManager for job id '%1$s'", jobId), ex);
-                return null;
-            }
-        }
-
-        if (job == null) {
-            logger.warn(String.format("Job with ID '%1$s' does not exist", jobId));
-            return null;
-        }
-
-        //Check user matches job
-        if (!user.getEmail().equals(job.getUser())) {
-            logger.warn(String.format("%1$s's attempt to fetch %2$s's job denied!", user, job.getUser()));
-            return null;
-        }
-
-        return job;
-    }
-
-    /**
-     * Attempts to get a series with a particular ID. If the series ID does NOT belong to the current
-     * user session null will be returned.
-     *
-     * This function will log all appropriate errors.
-     * @param jobId
-     * @return The VEGLSeries object on success or null otherwise.
-     */
-    private VEGLSeries attemptGetSeries(Integer seriesId, ANVGLUser user) {
-        VEGLSeries series = null;
-
-        //Check we have a user email
-        if (user == null || user.getEmail() == null) {
-            logger.warn("The current session is missing an email attribute");
-            return null;
-        }
-
-        //Attempt to fetch our job
-        if (seriesId != null) {
-            try {
-                series = jobManager.getSeriesById(seriesId.intValue(), user.getEmail());
-            } catch (Exception ex) {
-                logger.error(String.format("Exception when accessing jobManager for series id '%1$s'", seriesId), ex);
-                return null;
-            }
-        }
-
-        if (series == null) {
-            logger.warn(String.format("Series with ID '%1$s' does not exist", seriesId));
-            return null;
-        }
-
-        //Check user matches job
-        if (!user.getEmail().equals(series.getUser())) {
-            logger.warn(String.format("%1$s's attempt to fetch %2$s's job denied!", user, series.getUser()));
-            return null;
-        }
-
-        return series;
-    }
-
 //    /**
 //     * Returns a JSON object containing a list of the current user's series.
 //     *
@@ -269,7 +182,7 @@ public class JobListController extends BaseCloudController  {
             @AuthenticationPrincipal ANVGLUser user) {
         logger.info("Deleting job with ID " + jobId);
 
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "The requested job was not found.");
         }
@@ -305,7 +218,7 @@ public class JobListController extends BaseCloudController  {
             @RequestParam("seriesId") Integer seriesId,
             @AuthenticationPrincipal ANVGLUser user) {
 
-        VEGLSeries series = attemptGetSeries(seriesId, user);
+        VEGLSeries series = jobManager.getSeriesById(seriesId, user.getEmail());
         if (series == null) {
             return generateJSONResponseMAV(false);
         }
@@ -379,7 +292,7 @@ public class JobListController extends BaseCloudController  {
             @AuthenticationPrincipal ANVGLUser user) {
         logger.info("Cancelling job with ID "+jobId);
 
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "Unable to lookup job to kill.");
         }
@@ -464,7 +377,7 @@ public class JobListController extends BaseCloudController  {
             @RequestParam("seriesId") Integer seriesId,
             @AuthenticationPrincipal ANVGLUser user) {
 
-        VEGLSeries series = attemptGetSeries(seriesId, user);
+        VEGLSeries series = jobManager.getSeriesById(seriesId, user.getEmail());
         if (series == null) {
             return generateJSONResponseMAV(false, null, "Unable to lookup series.");
         }
@@ -508,7 +421,7 @@ public class JobListController extends BaseCloudController  {
     public ModelAndView getCloudFileMetadata(@RequestParam("jobId") Integer jobId,
             @RequestParam("fileName") String fileName,
             @AuthenticationPrincipal ANVGLUser user) {
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "The requested job was not found.");
         }
@@ -549,7 +462,7 @@ public class JobListController extends BaseCloudController  {
             @AuthenticationPrincipal ANVGLUser user) {
         logger.info("Getting job files for job ID " + jobId);
 
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "The requested job was not found.");
         }
@@ -591,7 +504,7 @@ public class JobListController extends BaseCloudController  {
             @RequestParam("key") String key,
             @AuthenticationPrincipal ANVGLUser user) {
 
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "Unable to lookup job object.");
         }
@@ -660,7 +573,7 @@ public class JobListController extends BaseCloudController  {
             @AuthenticationPrincipal ANVGLUser user) {
 
         //Lookup our job and check input files
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "Unable to lookup job object.");
         }
@@ -801,7 +714,7 @@ public class JobListController extends BaseCloudController  {
             @RequestParam("seriesId") Integer seriesId,
             @RequestParam(required=false, value="forceStatusRefresh", defaultValue="false") boolean forceStatusRefresh,
             @AuthenticationPrincipal ANVGLUser user) {
-        VEGLSeries series = attemptGetSeries(seriesId, user);
+        VEGLSeries series = jobManager.getSeriesById(seriesId, user.getEmail());
         if (series == null) {
             return generateJSONResponseMAV(false, null, "Unable to lookup job series.");
         }
@@ -856,7 +769,7 @@ public class JobListController extends BaseCloudController  {
         } catch (Exception e) {
             return generateJSONResponseMAV(false);
         }
-        
+
         if (job == null || !job.getEmailAddress().equals(user.getEmail())) {
             return generateJSONResponseMAV(false);
         }
@@ -1031,8 +944,8 @@ public class JobListController extends BaseCloudController  {
             @RequestParam("sourceJobId") Integer sourceJobId,
             @RequestParam("key") String[] keys) {
 
-        VEGLJob sourceJob = attemptGetJob(sourceJobId, user);
-        VEGLJob targetJob = attemptGetJob(targetJobId, user);
+        VEGLJob sourceJob = jobManager.getJobById(sourceJobId, user);
+        VEGLJob targetJob = jobManager.getJobById(targetJobId, user);
 
         if (sourceJob == null || targetJob == null) {
             logger.error(String.format("sourceJob %1$s or targetJob %2$s inaccessible to user %3$s", sourceJobId, targetJobId, user));
@@ -1084,11 +997,11 @@ public class JobListController extends BaseCloudController  {
         //Lookup the job we are cloning
         VEGLJob oldJob;
         try {
-             oldJob = attemptGetJob(jobId, user);
+             oldJob = jobManager.getJobById(jobId, user);
         } catch (AccessDeniedException e) {
             throw e;
         }
-        
+
         if (oldJob == null) {
             return generateJSONResponseMAV(false, null, "Unable to lookup job to duplicate.");
         }
@@ -1165,7 +1078,7 @@ public class JobListController extends BaseCloudController  {
             @RequestParam(value="file", required=false) String file,
             @AuthenticationPrincipal ANVGLUser user) {
         //Lookup the job whose logs we are accessing
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "The specified job does not exist.");
         }
@@ -1192,7 +1105,7 @@ public class JobListController extends BaseCloudController  {
         }
 
         //Lookup the job whose logs we are accessing
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             return generateJSONResponseMAV(false, null, "The specified job does not exist.");
         }
@@ -1229,7 +1142,7 @@ public class JobListController extends BaseCloudController  {
             @AuthenticationPrincipal ANVGLUser user) throws Exception {
 
         //Lookup the job whose logs we are accessing
-        VEGLJob job = attemptGetJob(jobId, user);
+        VEGLJob job = jobManager.getJobById(jobId, user);
         if (job == null) {
             response.sendError(HttpStatus.SC_NOT_FOUND);
             return;
@@ -1254,7 +1167,7 @@ public class JobListController extends BaseCloudController  {
             IOUtils.closeQuietly(os);
         }
     }
-    
+
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(value =  org.springframework.http.HttpStatus.FORBIDDEN)
     public @ResponseBody String handleException(AccessDeniedException e) {

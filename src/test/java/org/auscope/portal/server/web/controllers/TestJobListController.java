@@ -36,6 +36,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -166,13 +167,13 @@ public class TestJobListController extends PortalTestClass {
             allowing(queueMockJobs.get(1)).getStatus();will(returnValue(JobBuilderController.STATUS_INQUEUE));
             allowing(queueMockJobs.get(0)).getId();will(returnValue(5555));
             allowing(queueMockJobs.get(1)).getId();will(returnValue(jobId));
-            
+
             allowing(queueMockJobs.get(0)).isWalltimeSet(); will(returnValue(false));
             allowing(queueMockJobs.get(1)).isWalltimeSet(); will(returnValue(false));
 
             allowing(queueMockJobs.get(0)).getWalltime();will(returnValue(null));
             allowing(queueMockJobs.get(1)).getWalltime();will(returnValue(null));
-            
+
             oneOf(queueMockJobs.get(1)).setStatus(JobBuilderController.STATUS_UNSUBMITTED);
             oneOf(queueMockJobManager).saveJob(queueMockJobs.get(1));
             oneOf(queueMockJobManager).createJobAuditTrail(JobBuilderController.STATUS_INQUEUE, queueMockJobs.get(1), "Job cancelled by user.");
@@ -344,19 +345,14 @@ public class TestJobListController extends PortalTestClass {
     /**
      * Tests deleting a job fails when its another users job
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testDeleteJobNoPermission() {
         final String userEmail = "exampleuser@email.com";
-        final String jobEmail = "adifferentuser@email.com";
         final int jobId = 1234;
-        final VEGLJob mockJob = context.mock(VEGLJob.class);
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
-
-
-            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(returnValue(mockJob));
-            allowing(mockJob).getUser();will(returnValue(jobEmail));
+            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(throwException(new AccessDeniedException("denied")));
         }});
 
         ModelAndView mav = controller.deleteJob(mockRequest, mockResponse, jobId, mockPortalUser);
@@ -536,19 +532,14 @@ public class TestJobListController extends PortalTestClass {
     /**
      * Tests that killing a job fails when its not the user's job
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testKillJobNoPermission() {
         final String userEmail = "exampleuser@email.com";
-        final String jobEmail = "anotheruser@email.com";
         final int jobId = 1234;
-        final VEGLJob mockJob = context.mock(VEGLJob.class);
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
-
-            allowing(mockJob).getUser();will(returnValue(jobEmail));
-
-            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(returnValue(mockJob));
+            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(throwException(new AccessDeniedException("denied")));
         }});
 
         ModelAndView mav = controller.killJob(mockRequest, mockResponse, jobId, mockPortalUser);
@@ -630,18 +621,15 @@ public class TestJobListController extends PortalTestClass {
     /**
      * Tests that killing all jobs of a series fails when the user lacks permission
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testKillSeriesJobsNoPermission() {
         final String userEmail = "exampleuser@email.com";
-        final String seriesEmail = "anotheruser@email.com";
         final int seriesId = 1234;
-        final VEGLSeries mockSeries = context.mock(VEGLSeries.class);
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
 
-            oneOf(mockJobManager).getSeriesById(seriesId, userEmail);will(returnValue(mockSeries));
-            allowing(mockSeries).getUser();will(returnValue(seriesEmail));
+            oneOf(mockJobManager).getSeriesById(seriesId, userEmail);will(throwException(new AccessDeniedException("denied")));
         }});
 
         ModelAndView mav = controller.killSeriesJobs(mockRequest, mockResponse, seriesId, mockPortalUser);
@@ -699,19 +687,15 @@ public class TestJobListController extends PortalTestClass {
     /**
      * tests listing job files fails if the user doesnt have permission
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testListJobFilesNoPermission() throws Exception {
         final String userEmail = "exampleuser@email.com";
-        final String jobEmail = "anotheruser@email.com";
         final int jobId = 1234;
-        final VEGLJob mockJob = context.mock(VEGLJob.class);
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
 
-            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(returnValue(mockJob));
-            allowing(mockJob).getUser();will(returnValue(jobEmail));
-
+            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(throwException(new AccessDeniedException("denied")));
         }});
 
         ModelAndView mav = controller.jobFiles(mockRequest, mockResponse, jobId, mockPortalUser);
@@ -802,20 +786,17 @@ public class TestJobListController extends PortalTestClass {
     /**
      * Tests that downloading a single job file fails when the user doesnt own the job
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testDownloadJobFileNoPermission() throws Exception {
         final String userEmail = "exampleuser@email.com";
-        final String jobEmail = "anotheruser@email.com";
         final int jobId = 1234;
-        final VEGLJob mockJob = context.mock(VEGLJob.class);
         final String key = "my/file/key";
         final String fileName = "fileName.txt";
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
 
-            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(returnValue(mockJob));
-            allowing(mockJob).getUser();will(returnValue(jobEmail));
+            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(throwException(new AccessDeniedException("denied")));
         }});
 
         //Returns null on success
@@ -929,18 +910,15 @@ public class TestJobListController extends PortalTestClass {
     /**
      * Tests that downloading multiple job files fails if user doesn't own job
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testDownloadJobFilesNoPermission() throws Exception {
         final String userEmail = "exampleuser@email.com";
-        final String jobEmail = "anotheruser@email.com";
         final int jobId = 1234;
         final String files = "filekey1,filekey2";
-        final VEGLJob mockJob = context.mock(VEGLJob.class);
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
-            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(returnValue(mockJob));
-            allowing(mockJob).getUser();will(returnValue(jobEmail));
+            oneOf(mockJobManager).getJobById(jobId, mockPortalUser);will(throwException(new AccessDeniedException("denied")));
         }});
 
         //Returns null on success
@@ -1110,18 +1088,14 @@ public class TestJobListController extends PortalTestClass {
      * Tests that listing a job fails when its the incorrect user
      * @throws Exception
      */
-    @Test
+    @Test(expected=AccessDeniedException.class)
     public void testListJobsNoPermission() throws Exception {
         final String userEmail = "exampleuser@email.com";
-        final String seriesEmail = "anotheruser@email.com";
         final int seriesId = 1234;
-        final VEGLSeries mockSeries = context.mock(VEGLSeries.class);
 
         context.checking(new Expectations() {{
             allowing(mockPortalUser).getEmail();will(returnValue(userEmail));
-
-            oneOf(mockJobManager).getSeriesById(seriesId, userEmail);will(returnValue(mockSeries));
-            allowing(mockSeries).getUser();will(returnValue(seriesEmail));
+            oneOf(mockJobManager).getSeriesById(seriesId, userEmail);will(throwException(new AccessDeniedException("denied")));
         }});
 
         ModelAndView mav = controller.listJobs(mockRequest, mockResponse, seriesId, false, mockPortalUser);
