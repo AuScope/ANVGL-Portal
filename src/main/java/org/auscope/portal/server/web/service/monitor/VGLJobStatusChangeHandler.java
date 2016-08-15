@@ -51,8 +51,12 @@ public class VGLJobStatusChangeHandler implements JobStatusChangeListener {
                 LOG.debug("Unable to set process duration for" + job, ex);
             }
             vglJob.setStatus(newStatus);
+            if(newStatus.equals(JobBuilderController.STATUS_PENDING) ||
+                    newStatus.equals(JobBuilderController.STATUS_ACTIVE))
+                vglJob.setExecuteDate(new Date());
             jobManager.saveJob(vglJob);
             jobManager.createJobAuditTrail(oldStatus, vglJob, "Job status updated.");
+            
             //VT: only status done we email here. Any error notification are mailed not by polling but
             //when the job has it status set to error;
             if ((newStatus.equals(JobBuilderController.STATUS_DONE) && vglJob.getEmailNotification()) ||
@@ -66,8 +70,6 @@ public class VGLJobStatusChangeHandler implements JobStatusChangeListener {
                 anvglProvenanceService.createEntitiesForOutputs(vglJob);
         }
     }
-
-
 
     public void setProcessDuration(VEGLJob job,String newStatus){
         if (newStatus.equals(JobBuilderController.STATUS_DONE) ||
