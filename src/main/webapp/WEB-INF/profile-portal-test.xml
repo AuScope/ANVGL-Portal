@@ -43,6 +43,7 @@
             <list>
                 <ref bean="cswNCI" />
                 <ref bean="cswGAECat" />
+                <ref bean="cswNciMT" />
             </list>
         </constructor-arg>
     </bean>
