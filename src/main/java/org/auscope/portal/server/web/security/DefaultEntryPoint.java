@@ -21,7 +21,6 @@ public class DefaultEntryPoint extends BasicAuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-        if(authException != null)
-            response.sendRedirect("login.html");
+    	// No longer redirect to login page, code removed
     }
 }
